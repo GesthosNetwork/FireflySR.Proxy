@@ -10,6 +10,5 @@ namespace FireflySR.Proxy;
 )]
 [JsonSerializable(typeof(ProxyConfig))]
 internal partial class ProxyConfigContext : JsonSerializerContext
-{
-}
+{}
 #endif

@@ -1,39 +1,12 @@
 @echo off
+rd /s /q bin >nul 2>&1 & md bin\tool
+pushd FireflySR.Proxy
+dotnet publish
+popd
 
-if exist "%~dp0bin" (
-    rd /s /q "%~dp0bin"
-)
-mkdir "%~dp0bin\tool"
-cd .\FireflySR.Proxy
-dotnet publish -c Release
-
-for %%c in (
-   "%~dp0FireflySR.Proxy\bin\Release\net9.0\win-x64\publish\FireflySR.Proxy.exe"
-   "%~dp0FireflySR.Proxy\bin\Release\net9.0\win-x64\publish\config.json"
-) do (
-    if exist "%%~c" (
-       move "%%~c" "%~dp0bin"
-    )
-)
-
-for %%c in (
-   "%~dp0Guardian\bin\Release\net9.0\win-x64\publish\Guardian.exe"
-) do (
-    if exist "%%~c" (
-       move "%%~c" "%~dp0bin\tool"
-    )
-)
-
-for %%d in (
-    "%~dp0FireflySR.Proxy\bin"
-    "%~dp0FireflySR.Proxy\obj"
-    "%~dp0Guardian\bin"
-    "%~dp0Guardian\obj"
-) do (
-    if exist "%%~d" (
-        rd /s /q "%%~d" >nul
-    )
-)
+for /r "FireflySR.Proxy\bin\Release" %%f in (win-x64\publish\*.exe win-x64\publish\config.json) do move "%%f" "bin" >nul 2>&1
+for /r "Guardian\bin\Release" %%f in (win-x64\publish\*.exe) do move "%%f" "bin\tool" >nul 2>&1
+rd /s /q FireflySR.Proxy\bin FireflySR.Proxy\obj Guardian\bin Guardian\obj >nul 2>&1
 
 pause
 taskkill /F /IM dotnet.exe

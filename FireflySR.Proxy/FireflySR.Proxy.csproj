@@ -13,12 +13,13 @@
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Configuration>Release</Configuration>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <StartupObject>FireflySR.Proxy.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unobtanium.Web.Proxy" Version="0.1.1" />
+    <PackageReference Include="Unobtanium.Web.Proxy" Version="0.1.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,5 +35,9 @@
   <Target Name="PublishGuardian" BeforeTargets="Publish">
     <Exec Command="dotnet publish ..\Guardian\Guardian.csproj --configuration Release --runtime win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true" />
   </Target>
+  
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);0618</NoWarn>
+  </PropertyGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 A simple Proxy for playing Private Servers.
 
-## Requirements
+## Requirement
 
 - Install [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 

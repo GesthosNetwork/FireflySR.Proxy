@@ -20,7 +20,7 @@
         {
             _conf = conf ?? throw new ArgumentNullException(nameof(conf));
             _webProxyServer = new ProxyServer();
-            _webProxyServer.CertificateManager.EnsureRootCertificate();
+            _webProxyServer.CertificateManager.EnsureRootCertificate(true, true, false);
 
             _webProxyServer.BeforeRequest += BeforeRequest;
             _webProxyServer.ServerCertificateValidationCallback += OnCertValidation;

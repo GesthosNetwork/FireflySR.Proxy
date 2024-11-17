@@ -10,6 +10,7 @@
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Configuration>Release</Configuration>
   </PropertyGroup>
 
 </Project>
