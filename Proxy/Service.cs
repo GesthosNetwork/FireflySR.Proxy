@@ -1,14 +1,15 @@
-﻿namespace FireflySR.Proxy
-{
-    using System;
-    using System.Net;
-    using System.Net.Security;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Titanium.Web.Proxy;
-    using Titanium.Web.Proxy.EventArguments;
-    using Titanium.Web.Proxy.Models;
+﻿using System;
+using System.Net;
+using System.Net.Security;
+using System.Text;
+using System.Threading.Tasks;
+using Titanium.Web.Proxy;
+using Titanium.Web.Proxy.EventArguments;
+using Titanium.Web.Proxy.Models;
+using FireflySR.Proxy.Common;
 
+namespace FireflySR.Proxy
+{
     internal class ProxyService
     {
         private readonly ProxyConfig _conf;
@@ -20,7 +21,7 @@
         {
             _conf = conf ?? throw new ArgumentNullException(nameof(conf));
             _webProxyServer = new ProxyServer();
-            _webProxyServer.CertificateManager.EnsureRootCertificate(true, true, false);
+            _webProxyServer.CertificateManager.EnsureRootCertificate();
 
             _webProxyServer.BeforeRequest += BeforeRequest;
             _webProxyServer.ServerCertificateValidationCallback += OnCertValidation;
@@ -102,13 +103,7 @@
 
                 if (ShouldBlock(builtUrl))
                 {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.WriteLine("[Blocked]: ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine(requestUrl);
-                    Console.ResetColor();
-                    Console.WriteLine();
-
+                    Logger.Blocked(requestUrl);
                     args.Respond(new Titanium.Web.Proxy.Http.Response(Encoding.UTF8.GetBytes("Access denied"))
                     {
                         StatusCode = 404,
@@ -119,17 +114,8 @@
 
                 args.HttpClient.Request.Url = replacedUrl;
 
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write("Redirecting: ");
-                Console.ResetColor();
-                Console.WriteLine(requestUrl);
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("=>");
-                Console.ResetColor();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(replacedUrl);
-                Console.ResetColor();
-                Console.WriteLine();
+                Logger.Redirecting($"from: {requestUrl}");
+                Logger.Redirecting($"to:   {replacedUrl}");
             }
 
             return Task.CompletedTask;

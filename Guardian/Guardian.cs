@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Diagnostics;
+using FireflySR.Proxy.Common;
 
 namespace FireflySR.Proxy.Guardian;
 
@@ -8,21 +9,21 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
+        Logger.Init();
+
         if (args.Length != 1 || !int.TryParse(args[0], out var watchPid))
         {
-            Console.WriteLine("Usage: Guardian [watch-pid]");
+            Logger.Info("Usage: Guardian [watch-pid]");
             Environment.Exit(1);
             return;
         }
         
-		Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Guardian start...");
-        Console.ResetColor();
+        Logger.Info("Guardian start...");
         Process proc;
         try
         {
             proc = Process.GetProcessById(watchPid);
-            Console.WriteLine($"Guardian find process {proc.ProcessName} : {watchPid}");
+            Logger.Info($"Guardian found process {proc.ProcessName} : {watchPid}");
         }
         catch
         {
@@ -45,13 +46,11 @@ internal class Program
             using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Internet Settings", true);
 
             key?.SetValue("ProxyEnable", 0);
-            Console.WriteLine($"Guardian successfully disabled System Proxy.");
+            Logger.Info($"Guardian successfully disabled System Proxy.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            Console.WriteLine();
-            Console.WriteLine($"Guardian failed to disable System Proxy.");
+            Logger.Fail($"Failed to disable system proxy. Exception: {ex}");
         }
     }
 }
